@@ -6,7 +6,6 @@
     "start": "node app_3001.js"
   },
   "dependencies": {
-    "alpha": "*",
     "ejs": "*",
     "pm": "*",
     "wechat":"*",

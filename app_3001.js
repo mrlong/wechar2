@@ -1,10 +1,19 @@
+///////////////////////////////////////////////////////////////////////////////
+//
+// 作者: mrlong 2014-3-18
+//
+//  学习应用wechat 的API接口
+//
+//
+//
+///////////////////////////////////////////////////////////////////////////////
+
 var fs = require('fs');
 var path = require('path');
 var http = require('http');
 var connect = require('connect');
 var wechat = require('wechat');
 var config = require('./config');
-var alpha = require('alpha');
 var ejs = require('ejs');
 var routes = require('./routes');
 
@@ -21,7 +30,7 @@ app.use(connect.query());
 app.use(connect.static(__dirname + '/assets', { maxAge: 86400000 }));
 app.use(connect.cookieParser());
 app.use(connect.session({secret: config.secret}));
-routes(app);
+app.use('/wechat', routes);
 
 var tpl = ejs.compile(fs.readFileSync(path.join(__dirname, 'views/detail.html'), 'utf-8'));
 app.use('/detail', function (req, res) {
