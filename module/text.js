@@ -3,9 +3,19 @@
 // 文本信息推送器 
 //
 
+var Util = require('../lib/util');
+var Pinyin = require('../lib/pinyin');
+
 module.exports = function(message, req, res, next){
   console.log(message);
   var input = (message.Content || '').trim();
+  var content = '';
+
+  if (Util.isChinese(input) === true){
+    content = Pinyin.pinyin(input);
+  }
+
+/*
   if (input === '大王') {
     return res.reply("不要叫我大王，要叫我mrlong大人啊……");
   }
@@ -24,6 +34,7 @@ module.exports = function(message, req, res, next){
       content = '女王大人:\n' + content;
     }
   }
+*/
   console.log(content);
   res.reply(content);
 };
