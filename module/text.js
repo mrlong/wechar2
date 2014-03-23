@@ -3,17 +3,53 @@
 // 文本信息推送器 
 //
 
+var config = require('../config');
 var Util = require('../lib/util');
+var Xhzd = require('../lib/xhzdSchema');
 var Pinyin = require('../lib/pinyin');
 
 module.exports = function(message, req, res, next){
-  console.log(message);
+  //console.log(message);
+  
   var input = (message.Content || '').trim();
   var content = '';
 
+  //中文
   if (Util.isChinese(input) === true){
-    content = Pinyin.pinyin(input);
+    //新华字典
+    if (input.length === 1){
+      Xhzd.ZiFind(input,function(err,doc){
+        if(!err && doc){
+          content = [];
+          var blank = '';
+          for (var i=0;i<doc.pinyin.length;i++){blank = blank + ' ';}
+          content.push({
+            title: input,
+            description: '拼音:' + doc.pinyin +  '   五笔:' + doc.wubi + '\n' +
+                         '笔划:' + doc.bihua + blank +'  部首:' + doc.bushou + '\n' +
+                         '注解:\n' + doc.jijie.replace(/<br>/ig, '\n').replace(/<\/br>/ig, '\n').trim(),
+            //picurl: config.domain + '/qrcode.jpg',
+            url: config.domain + '/pinyin?id=' + doc._id
+          });
+          res.reply(content);
+        }
+        else{
+          content = '字库内没有找到:' + input  + '(' + Pinyin.pinyin(input) + ')。';  
+          res.reply(content);
+        }
+      });
+      
+    }
+    //新华词典
+    else {
+      content = Pinyin.pinyin(input) + '\n暂不支持新华词典。' ;
+      res.reply(content);
+    }
   }
+  else{
+    content = '暂不支持英汉字典。';
+    res.reply(content);
+  };
 
 /*
   if (input === '大王') {
@@ -35,6 +71,5 @@ module.exports = function(message, req, res, next){
     }
   }
 */
-  console.log(content);
-  res.reply(content);
+  
 };

@@ -1,0 +1,127 @@
+官方参数名        定义                        info对象属性                     备注
+-------------------------------------------------------------------------------------------------------
+
+ToUserName      开发者微信号                   info.sp                      sp means "service provider"
+FromUserName    发送方帐号（一个OpenID）       info.uid
+CreateTime      消息创建时间 （整型）
+MsgId           消息id                         info.id
+MsgType         消息类型                       info.type
+-------------------------------------------------------------------------------------------------------
+Content         文本消息内容                   info.text                    MsgType == text
+-------------------------------------------------------------------------------------------------------
+PicUrl          图片链接                       info.param.picUrl            MsgType == image
+-------------------------------------------------------------------------------------------------------
+Location_X      地理位置纬度(lat)              info.param.lat               MsgType == location
+Location_Y      地理位置经度(lng)              info.param.lng
+Scale           地图缩放大小                   info.param.scale
+Label           地点名                         info.param.label             可能为空
+-------------------------------------------------------------------------------------------------------
+Title           消息标题                       info.param.title              MsgType == link
+Description     消息描述                       info.param.description
+Url             消息链接                       info.param.url
+-------------------------------------------------------------------------------------------------------
+Event           事件类型                       info.param.event              MsgType == event
+                subscribe(订阅)、
+                unsubscribe(取消订阅)、
+                CLICK(自定义菜单点击事件)
+                LOCATION(上报地理位置事件)
+
+EventKey        事件KEY值，与自定义菜单接      info.param.eventKey
+                口中KEY值对应
+--------------------------------------------------------------------------------------------------------
+MediaId         媒体文件的 id                  info.param.mediaId             MsgType == voice / video
+Recognition     语音识别的文本                 info.param.recognition         MsgType == voice
+ThumbMediaId    视频消息缩略图的媒体id         info.param.thumbMediaId        MsgType == video
+Format          音频文件的格式                 info.param.format
+
+
+
+
+注意：
+
+大部分属性值只是把首字母大写换成了小写。地理信息的 Location_X 和 Location_Y 除外。
+recognition 参数需要开通微信的语音识别功能，同时为方便调用，此文本也会直接存到 info.text 也就是说，语音识别消息与普通文本消息都有 info.text ，只不过 info.type 不同
+例如，地理位置消息( MsgType === 'location') 会被转化为：
+
+{
+  uid: 'the_FromUserName',
+  sp: 'the_ToUserName',
+  id: 'the_MsgId',
+  type: 'location',
+  param: {
+    lat: 'the_Location_X',
+    lng: 'the_Location_Y',
+    scale: 'the_Scale',
+    label: 'the_Label'
+  }
+}
+info.reply
+
+大部分时候你并不需要直接给 info.reply 赋值。
+
+你只需在 rule.handler 的返回值或 callbak 里提供回复消息的内容， webot.watch 自带的 express 中间件会自动给 info.reply 赋值， 并将其打包成 XML 发送给微信服务器。
+
+info.reply 支持的数据类型：
+
+{String} 直接回复文本消息，不能超过2048字节
+{Object} 单条 图文消息/音乐消息
+{Array} 多条图文消息
+回复文本消息
+
+info.reply = '收到你的消息了，谢谢'
+回复图文消息
+
+title        消息标题
+url          消息网址
+description  消息描述
+picUrl       消息图片网址
+info.reply = {
+  title: '消息标题',
+  url: 'http://example.com/...',
+  picUrl: 'http://example.com/....a.jpg',
+  description: '对消息的描述出现在这里',
+}
+
+// or
+
+info.reply = [{
+  title: '消息1',
+  url: 'http://example.com/...',
+  picUrl: 'http://example.com/....a.jpg',
+  description: '对消息的描述出现在这里',
+}, {
+  title: '消息2',
+  url: 'http://example.com/...',
+  picUrl: 'http://example.com/....a.jpg',
+  description: '对消息的描述出现在这里',
+}]
+回复音乐消息
+
+title             标题
+description       描述
+musicUrl          音乐链接
+hqMusicUrl        高质量音乐链接，wifi 环境下会优先使用该链接播放音乐
+需指定 reply.type 为 'music'：
+
+info.reply = {
+  type: 'music',
+  title: 'Music 101',
+  musicUrl: 'http://....x.mp3',
+  hqMusicUrl: 'http://....x.m4a'
+}
+Have fun with wechat, and enjoy being a robot!
+
+info.noReply
+
+如果对不想回复的消息，可设置 info.noReply = true
+
+// 比如对于语音类型的消息不回复
+webot.set('ignore', {
+  pattern: function(info) {
+    return info.is('voice');
+  },
+  handler: function(info) {
+    info.noReply = true;
+    return;
+  }
+});

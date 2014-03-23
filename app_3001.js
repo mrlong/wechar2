@@ -16,6 +16,7 @@ var wechat = require('wechat');
 var config = require('./config');
 var ejs = require('ejs');
 var routes = require('./routes');
+var Xhzd = require('./lib/xhzdSchema');  //字典库操作，以后要移出掉。
 
 var worker = require('pm').createWorker();
 
@@ -32,21 +33,24 @@ app.use(connect.cookieParser());
 app.use(connect.session({secret: config.secret}));
 app.use('/wechat', routes);
 
-var tpl = ejs.compile(fs.readFileSync(path.join(__dirname, 'views/detail.html'), 'utf-8'));
-app.use('/detail', function (req, res) {
+/////////////这地方什么移到别的地方？？？？？？？？？？
+var tpl = ejs.compile(fs.readFileSync(path.join(__dirname, 'views/pinyin.html'), 'utf-8'));
+app.use('/pinyin', function (req, res) {
   var id = req.query.id || '';
-  var info = alpha.access(alpha.getKey(id));
-  if (info) {
-    res.writeHead(200);
-    res.end(tpl(info));
-  } else {
-    res.writeHead(404);
-    res.end('Not Found');
-  }
+  Xhzd.ZiFindByid(id,function(err,doc){
+    if(!err && doc){
+      res.writeHead(200);
+      res.end(tpl(doc));
+    }
+    else{
+      res.writeHead(404);
+      res.end('Not Found');
+    }
+  });  
 });
+////////////////////////////////////////////
 
 app.use('/', function (req, res) {
-  console.log('111');
   res.writeHead(200);
   res.end('hello node api');
 });
@@ -65,6 +69,5 @@ var server = http.createServer(app);
 server.listen(3003);
 
 worker.ready(function (socket) {
-  console.log('111');
   server.emit('connection', socket);
 });
