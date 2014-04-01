@@ -7,6 +7,7 @@ var config = require('../config');
 var Util = require('../lib/util');
 var Xhzd = require('../lib/xhzdSchema');
 var Pinyin = require('../lib/pinyin');
+var Shpz = require('../lib/shpzSchema');
 
 module.exports = function(message, req, res, next){
   //console.log(message);
@@ -34,11 +35,18 @@ module.exports = function(message, req, res, next){
           res.reply(content);
         }
         else{
-          content = '字库内没有找到:' + input  + '(' + Pinyin.pinyin(input) + ')。';  
-          res.reply(content);
-        }
+          Shpz.add(input,message.FromUserName,function(err){
+            if(!err){
+              content = '字库内没有找到:' + input  + '(' + Pinyin.pinyin(input) + ')。'+'\n' +
+                        '我们已将你的查字录入生癖字库，不断完美我们的字库。';  
+            }
+            else{
+              content = '字库内没有找到:' + input  + '(' + Pinyin.pinyin(input) + ')。' ;
+            };
+            res.reply(content);
+          });
+        };
       });
-      
     }
     //新华词典
     else {
