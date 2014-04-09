@@ -8,6 +8,7 @@ var Util = require('../lib/util');
 var Xhzd = require('../lib/xhzdSchema');
 var Pinyin = require('../lib/pinyin');
 var Shpz = require('../lib/shpzSchema');
+var Cycd = require('../lib/cycdSchema');
 
 module.exports = function(message, req, res, next){
   //console.log(message);
@@ -26,9 +27,9 @@ module.exports = function(message, req, res, next){
           for (var i=0;i<doc.pinyin.length;i++){blank = blank + ' ';}
           content.push({
             title: input,
-            description: '拼音:' + doc.pinyin +  '   五笔:' + doc.wubi + '\n' +
-                         '笔划:' + doc.bihua + blank +'  部首:' + doc.bushou + '\n' +
-                         '注解:\n' + doc.jijie.replace(/<br>/ig, '\n').replace(/<\/br>/ig, '\n').trim(),
+            description: '【拼音】:' + doc.pinyin +  '   【五笔】:' + doc.wubi + '\n' +
+                         '【笔划】:' + doc.bihua + blank +'  【部首】:' + doc.bushou + '\n' +
+                         '【注解】:\n' + doc.jijie.replace(/<br>/ig, '\n').replace(/<\/br>/ig, '\n').trim(),
             //picurl: config.domain + '/qrcode.jpg',
             url: config.domain + '/pinyin?id=' + doc._id
           });
@@ -50,11 +51,30 @@ module.exports = function(message, req, res, next){
     }
     //新华词典
     else {
-      content = Pinyin.pinyin(input) + '\n暂不支持新华词典。' ;
-      res.reply(content);
+      Cycd.CyFind(input,function(err,doc){
+        if(!err && doc){
+          content = [];
+          var blank = '';
+          content.push({
+            title: input,
+            description: '【拼音】:' + doc.pinyin + '\n' +
+                         '【解释】:\n' + doc.js  + '\n'  +
+                         '【出自】:\n' + doc.cz  + '\n'  +
+                         '【示例】:\n' + doc.sl
+            //url: config.domain + '/pinyin?id=' + doc._id
+          });
+          res.reply(content);
+        }
+        else{
+          content = Pinyin.pinyin(input) + '\n亲！词典库内查不到:' + input + '\n 〖本应用提供单字及四字词语查功能〗';
+          res.reply(content);
+        }      
+      });
+      
     }
   }
   else{
+
     content = '暂不支持英汉字典。';
     res.reply(content);
   };
