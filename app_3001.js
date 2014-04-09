@@ -17,6 +17,7 @@ var config = require('./config');
 var ejs = require('ejs');
 var routes = require('./routes');
 var Xhzd = require('./lib/xhzdSchema');  //字典库操作，以后要移出掉。
+var Cycd = require('./lib/cycdSchema');  //成语词典
 
 var worker = require('pm').createWorker();
 
@@ -34,13 +35,13 @@ app.use(connect.session({secret: config.secret}));
 app.use('/wechat', routes);
 
 /////////////这地方什么移到别的地方？？？？？？？？？？
-var tpl = ejs.compile(fs.readFileSync(path.join(__dirname, 'views/pinyin.html'), 'utf-8'));
+var tpl_pinyin = ejs.compile(fs.readFileSync(path.join(__dirname, 'views/pinyin.html'), 'utf-8'));
 app.use('/pinyin', function (req, res) {
   var id = req.query.id || '';
   Xhzd.ZiFindByid(id,function(err,doc){
     if(!err && doc){
       res.writeHead(200);
-      res.end(tpl(doc));
+      res.end(tpl_pinyin(doc));
     }
     else{
       res.writeHead(404);
@@ -48,6 +49,23 @@ app.use('/pinyin', function (req, res) {
     }
   });  
 });
+
+//成语词典
+var tpl_cycd = ejs.compile(fs.readFileSync(path.join(__dirname, 'views/cycd.html'), 'utf-8'));
+app.use('/cycd', function (req, res) {
+  var id = req.query.id || '';
+  Cycd.CyFindByid(id,function(err,doc){
+    if(!err && doc){
+      res.writeHead(200);
+      res.end(tpl_cycd(doc));
+    }
+    else{
+      res.writeHead(404);
+      res.end('Not Found');
+    }
+  });  
+});
+
 ////////////////////////////////////////////
 
 app.use('/', function (req, res) {
