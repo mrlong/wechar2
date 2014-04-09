@@ -26,7 +26,7 @@ module.exports = function(event, req, res, next){
     //User.add(event.FromUserName,function(err){});
 
     // 用户添加时候的消息
-  	res.reply('谢谢添加字典公众账号，查生癖字，查字解释，字的祥细注解。应用尽用，新华字典有的都有。:)\n请输入一个字，将会得到相关描述。');
+  	res.reply('谢谢添加字典公众账号，查生癖字，查字解释，字或词语的祥细注解。包括《新华字典》，《成语大全》及《汉语词典》共三十万条数据供你查询。:)\n请输入一个字或一个词组，将会得到相关描述。');
     
   } else if (event.Event === 'unsubscribe') {
     //这个接口必须在认证之后才能用

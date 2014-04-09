@@ -9,6 +9,7 @@ var Xhzd = require('../lib/xhzdSchema');
 var Pinyin = require('../lib/pinyin');
 var Shpz = require('../lib/shpzSchema');
 var Cycd = require('../lib/cycdSchema');
+var Hycd = require('../lib/hycdSchema');
 
 module.exports = function(message, req, res, next){
   //console.log(message);
@@ -53,8 +54,7 @@ module.exports = function(message, req, res, next){
     else {
       Cycd.CyFind(input,function(err,doc){
         if(!err && doc){
-          content = [];
-          var blank = '';
+          var content = [];
           content.push({
             title: input,
             description: '【拼音】:' + doc.pinyin + '\n' +
@@ -66,9 +66,27 @@ module.exports = function(message, req, res, next){
           res.reply(content);
         }
         else{
-          content = Pinyin.pinyin(input) + '\n亲！词典库内查不到:' + input + '\n 〖本应用提供单字及四字词语查功能〗';
-          res.reply(content);
-        }      
+          //找汉语词典
+          Hycd.HyFind(input,function(err,doc){
+            if(!err && doc){
+              var content = [];
+              content.push({
+                title: input,
+                description: '【拼音】:' + Pinyin.pinyin(input) + '\n' +
+                             '【解释】:\n' + doc.js.replace('[反]', '【反义】:')
+                                                  .replace('[似]', '【类似】:')
+                                                  .replace(/<br>/ig, '\n')
+                                                  .replace(/<\/br>/ig, '\n').trim()
+              });
+              res.reply(content);
+            }
+            else{
+              content = Pinyin.pinyin(input) + '\n亲！词典库内查不到:' + input + '\n 〖本应用提供单字及多字词语查功能〗';
+              res.reply(content);
+            }
+          });
+          
+        }//else      
       });
       
     }
