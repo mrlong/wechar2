@@ -60,8 +60,8 @@ module.exports = function(message, req, res, next){
             description: '【拼音】:' + doc.pinyin + '\n' +
                          '【解释】:\n' + doc.js  + '\n'  +
                          '【出自】:\n' + doc.cz  + '\n'  +
-                         '【示例】:\n' + doc.sl
-            //url: config.domain + '/pinyin?id=' + doc._id
+                         '【示例】:\n' + doc.sl,
+            url: config.domain + '/cycd?id=' + doc._id
           });
           res.reply(content);
         }
