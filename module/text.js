@@ -30,7 +30,8 @@ module.exports = function(message, req, res, next){
             title: input,
             description: '【拼音】:' + doc.pinyin +  '   【五笔】:' + doc.wubi + '\n' +
                          '【笔划】:' + doc.bihua + blank +'  【部首】:' + doc.bushou + '\n' +
-                         '【注解】:\n' + doc.jijie.replace(/<br>/ig, '\n').replace(/<\/br>/ig, '\n').trim(),
+                         '【注解】:\n' + doc.jijie.replace(/<br>/ig, '\n').replace(/<\/br>/ig, '\n').trim() + '\n\n' +
+                         '                    《新华字典》',
             //picurl: config.domain + '/qrcode.jpg',
             url: config.domain + '/pinyin?id=' + doc._id
           });
@@ -60,8 +61,9 @@ module.exports = function(message, req, res, next){
             description: '【拼音】:' + doc.pinyin + '\n' +
                          '【解释】:\n' + doc.js  + '\n'  +
                          '【出自】:\n' + doc.cz  + '\n'  +
-                         '【示例】:\n' + doc.sl,
-            url: config.domain + '/cycd?id=' + doc._id
+                         '【示例】:\n' + doc.sl  + '\n\n'  +
+                         '                    《成语大全》'
+            //url: config.domain + '/cycd?id=' + doc._id
           });
           res.reply(content);
         }
@@ -76,7 +78,8 @@ module.exports = function(message, req, res, next){
                              '【解释】:\n' + doc.js.replace('[反]', '【反义】:')
                                                   .replace('[似]', '【类似】:')
                                                   .replace(/<br>/ig, '\n')
-                                                  .replace(/<\/br>/ig, '\n').trim()
+                                                  .replace(/<\/br>/ig, '\n').trim() + '\n\n' +
+                             '                    《汉语词典》'
               });
               res.reply(content);
             }
