@@ -18,6 +18,7 @@ var ejs = require('ejs');
 var routes = require('./routes');
 var Xhzd = require('./lib/xhzdSchema');  //字典库操作，以后要移出掉。
 var Cycd = require('./lib/cycdSchema');  //成语词典
+var wikipedia = require("wikipedia-js");
 
 var worker = require('pm').createWorker();
 
@@ -64,6 +65,24 @@ app.use('/cycd', function (req, res) {
       res.end('Not Found');
     }
   });  
+});
+
+//维基查找
+//wikipedia
+var tpl_wiki = ejs.compile(fs.readFileSync(path.join(__dirname, 'views/wikipedia.html'), 'utf-8'));
+app.use('/wiki', function (req, res) {
+  var search = req.query.search || '';
+  var options = {query: search, format: "html", summaryOnly: true};
+  wikipedia.searchArticle(options, function(err, html){
+    if(err){
+      res.writeHead(200);
+      res.end(tpl_wiki({'search':search,'content':'查找维基百科出错，请重试。' +err}));
+    }
+    else{
+      res.writeHead(200);
+      res.end(tpl_wiki({'search':search,'content':html}));
+    }  
+  });
 });
 
 ////////////////////////////////////////////
