@@ -8,14 +8,47 @@
   <title><%-search%></title>
 </head>
 
+<script>
+  var onloaddata =function(){
+		var xmlhttp=new XMLHttpRequest();
+		xmlhttp.onreadystatechange=function(){
+			if (xmlhttp.readyState==4 )
+    	{
+    		if (xmlhttp.status==200){
+    			document.getElementById("content").innerHTML=xmlhttp.responseText==''?'维基百科内还没有你所查找的内容。':xmlhttp.responseText;
+    		}
+    		else{
+    			document.getElementById("content").innerHTML='服务请求出错，代码：' + xmlhttp.status;
+    		}
+    	
+    	}
+    	else if(xmlhttp.readyState==0){
+    		document.getElementById("content").innerHTML='在正准备数据...';
+    	}
+    	else if(xmlhttp.readyState==1){
+    		document.getElementById("content").innerHTML='在正发送数据...';
+    	}
+    	else if(xmlhttp.readyState==2){
+    		document.getElementById("content").innerHTML='在正发送数据完成...';
+    	}
+    	else if(xmlhttp.readyState==3){
+    		document.getElementById("content").innerHTML='在正接收到数据中...';
+    	}
+		};
 
-<bode>
-<% if(content) {%>
-<%-content%>
-<%}else{%>
-<p>维基百科内还没有你所查找的内容。</p>
-<%}%>
+		var url = 'http://xhzd.mrlong.cn/wiki?search=<%-search%>&idx=1';
+		xmlhttp.open("GET",url,true);
+  	xmlhttp.send();
+  };
+  document.addEventListener('WeixinJSBridgeReady',onloaddata);
 
-<strong>数据来源于<a href="http://zh.m.wikipedia.org">维基百科</a></strong> 
+</script>
+
+<bode> 
+<p id='content'><%-content%></p>
+<hr>
+<div style="text-align:right;">
+<strong>更祥细进入<a href="http://zh.m.wikipedia.org/wiki/<%-search%>">维基百科</a></strong> 
+</div>
 </bode>
 </html>

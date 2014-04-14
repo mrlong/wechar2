@@ -72,20 +72,25 @@ app.use('/cycd', function (req, res) {
 var tpl_wiki = ejs.compile(fs.readFileSync(path.join(__dirname, 'views/wikipedia.html'), 'utf-8'));
 app.use('/wiki', function (req, res) {
   var search = req.query.search || '';
-  console.log('wiki='+search);
-  var options = {query: search, format: "html", summaryOnly: true};
-  wikipedia.searchArticle(options, function(err, html){
-    if(err){
-      res.writeHead(200);
-      res.end(tpl_wiki({'search':search,'content':'查找维基百科出错，请重试。' +err}));
-    }
-    else{
-      res.writeHead(200);
-      res.end(tpl_wiki({'search':search,'content':html}));
-    }  
-  });
+  var idx    = req.query.idx || '';
+  if (idx==''){
+    res.writeHead(200);
+    res.end(tpl_wiki({'search':search,'content':'请稍候...'}));
+  }
+  else{
+    var options = {query: search, format: "html", summaryOnly: true};
+    wikipedia.searchArticle(options, function(err, html){
+      if(err){
+        res.writeHead(200);
+        res.end('查找维基百科出错，请重试。' +err);
+      }
+      else{
+        res.writeHead(200);
+        res.end(html);
+      }  
+    }); 
+  };
 });
-
 ////////////////////////////////////////////
 
 app.use('/', function (req, res) {

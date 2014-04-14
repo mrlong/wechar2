@@ -110,8 +110,13 @@ module.exports = function(message, req, res, next){
     }
   }
   else{
+    var content = [];
 
-    content = '暂不支持英汉字典。';
+    content.push({ 
+      title:'亲！暂不支持英汉字典。',
+      description:'点击到维基百科试试运气...',
+      url:encodeURI(config.domain + '/wiki?search='+input)
+    });
     res.reply(content);
   };
 
