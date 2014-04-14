@@ -63,7 +63,7 @@ module.exports = function(message, req, res, next){
                          '【出自】:\n' + doc.cz  + '\n'  +
                          '【示例】:\n' + doc.sl  + '\n\n'  +
                          '                    《成语大全》',
-            url:config.domain + '/wiki?search='+input
+            url:encodeURI(config.domain + '/wikipedia?search='+input)
           });
           res.reply(content);
         }
@@ -85,7 +85,7 @@ module.exports = function(message, req, res, next){
                                                   .replace(/<br>/ig, '\n')
                                                   .replace(/<\/br>/ig, '\n').trim() + '\n\n' +
                              '                    《汉语词典》',
-                url:config.domain + '/wiki?search='+input
+                url:encodeURI(config.domain + '/wiki?search='+input)
                
               });
               res.reply(content);
@@ -93,13 +93,13 @@ module.exports = function(message, req, res, next){
             else{
               var content = [];
               content.push({
-                title:'亲！词典库内未收录:'+input,
+                title:'亲！词典库未收录:\n'+input+'(' + Pinyin.pinyin(input) + ')',
                 description:Pinyin.pinyin(input) + '\n亲！词典库内查不到:' + input + '\n 〖本应用提供单字及多字词语查功能〗' +
                   '\n' + '点击到维基百科试试运气...',
                 picurl: config.domain + '/error.jpg'
                    
               },
-              {title:'点击到维基百科试试运气...',url:config.domain + '/wiki?search='+input});
+              {title:'点击到维基百科试试运气...',url:encodeURI(config.domain + '/wiki?search='+input)});
               res.reply(content);
             }
           });

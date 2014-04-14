@@ -72,6 +72,7 @@ app.use('/cycd', function (req, res) {
 var tpl_wiki = ejs.compile(fs.readFileSync(path.join(__dirname, 'views/wikipedia.html'), 'utf-8'));
 app.use('/wiki', function (req, res) {
   var search = req.query.search || '';
+  console.log('wiki='+search);
   var options = {query: search, format: "html", summaryOnly: true};
   wikipedia.searchArticle(options, function(err, html){
     if(err){
