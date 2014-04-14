@@ -4,6 +4,16 @@
 //
 //  学习应用wechat 的API接口
 //
+// 第三方包：
+//  wikipadia-js 使用时，要修改符合本地的路径：
+//
+//  lib\constants\wikiConstants.js 
+//  module.exports.WIKIPEDIA_EN_URL = "http://zh.m.wikipedia.org";
+//  module.exports.WIKIPEDIA_EN_URL_WIKI = "http://zh.m.wikipedia.org/wiki/";
+//  module.exports.WIKIPEDIA_EN_API_URL = "http://zh.wikipedia.org/w/api.php";
+//  module.exports.PROJECT_GUTENBERG_EBOOK_BASE_URL = "http://www.gutenberg.org/ebooks/";
+//  module.exports.WORLDCAT_IDENTITY_LINK = "http://www.worldcat.org/identities/";
+//
 //
 //
 ///////////////////////////////////////////////////////////////////////////////
