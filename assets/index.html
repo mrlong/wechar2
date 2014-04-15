@@ -2,9 +2,49 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>活用新华字典</title>
+  <title>字典</title>
 </head>
-<body>
+<script>
+  function is_weixn(){
+    var ua = navigator.userAgent.toLowerCase();
+    if(ua.match(/MicroMessenger/i)=='micromessenger') {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  function gz(){
+    if (typeof WeixinJSBridge == 'undefined') return false; 
+
+    //下面这个路径是在后面的素材库内的。要对应起来。
+    window.open('http://mp.weixin.qq.com/s?__biz=MzA4MzQ1MzUyMA==&mid=200145672&idx=1&sn=ac08ac5141f75e1d27770c1a944a4af6#rd');
+
+
+    /*var MsgType = {
+      "add_contact:cancel": "用户取消",
+      "add_contact:fail": "关注失败",
+      "add_contact:ok": "关注成功",
+      "add_contact:added": "已经关注",
+      "system:access_denied":"连接被微信拒绝访问,给你带来不便请凉解。"
+    };
+
+    WeixinJSBridge.invoke('addContact', {  
+            webtype: '1',  
+            username: 'gh_232637227640'  
+        }, function(d) {  
+           alert(MsgType[d.err_msg]);
+        });  */
+  };
+
+  function loaddoc(){
+    if (is_weixn() == true){
+      document.getElementById('gz').innerHTML='<input type="button"   style="width: 200px; height: 80px;background-color: #FA5858;font-size: 50px" value="关 注" onClick="gz()"/>';    
+    };
+  };
+
+</script>
+<body onload="loaddoc()">
   <h1>字典</h1>
   <h2><font color=red>最后修改时间:2014－4－13 | 创建时间:2014－3－2</font></h2>
   <h3>
@@ -16,8 +56,15 @@
      将来会书法字体。
   </p>
   <p>
-    <img src="./qrcode.jpg" />
     <table>
+      <tr>
+        <td widht=350>
+          <img src="./qrcode.jpg" /> 
+        </td>
+        <td id='gz'>
+
+        </td>
+      </tr>
       <tr >
         <td width=350>
           <span style="float:right;">收录《新华字典》五万个汉字的拼音、五笔、笔划、注解。只要录入一个单字。软件会自动回复祥细信息。</span>
@@ -53,7 +100,6 @@
             
         </td>
         <td>
-          
           <span style="float:right;">直接可以对维基百科数据联接并进行实时查找。</span>
         </td>  
       </tr>
@@ -67,6 +113,5 @@
      2.2014－3－18 增加新华字典。</br>
      3.2014－3－25 增加成语大全及汉语词典。</br>
      4.2014－4－13 增加维基百科。</br>
-
 </body>
 </html>
