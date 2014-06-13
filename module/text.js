@@ -94,7 +94,7 @@ module.exports = function(message, req, res, next){
             else{
               //3.没有找到时，有没有相近的拼音
               Cycd.CyFindBypy(Pinyin.pinyin(input),function(err,docs){
-                if(!err && docs){
+                if(!err && docs && docs.length>0){
                   var content = [];
                   content.push({
                     title:'亲！词典库未收录:\n'+input+'(' + Pinyin.pinyin(input) + ')',
@@ -103,13 +103,14 @@ module.exports = function(message, req, res, next){
                     picurl: config.domain + '/error.jpg'
                    
                   });
-
+                  
                   content.push({
                     title:docs[0].cy,
                     url:encodeURI(config.domain + '/cycd?id='+docs[0]._id)
                   });
 
-                  content.push({title:'点击到维基百科试试运气...',url:encodeURI(config.domain + '/wiki?search='+input)}));
+                  content.push({title:'点击到维基百科试试运气...',url:encodeURI(config.domain + '/wiki?search='+input)});
+                  
                   res.reply(content);
 
                 }
