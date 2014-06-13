@@ -53,6 +53,7 @@ module.exports = function(message, req, res, next){
     }
     //新华词典
     else {
+        //1.找成语词典
       Cycd.CyFind(input,function(err,doc){
         if(!err && doc){
           var content = [];
@@ -89,19 +90,47 @@ module.exports = function(message, req, res, next){
                
               });
               res.reply(content);
-            }
+            }              
             else{
-              var content = [];
-              content.push({
-                title:'亲！词典库未收录:\n'+input+'(' + Pinyin.pinyin(input) + ')',
-                description:Pinyin.pinyin(input) + '\n亲！词典库内查不到:' + input + '\n 〖本应用提供单字及多字词语查功能〗' +
-                  '\n' + '点击到维基百科试试运气...',
-                picurl: config.domain + '/error.jpg'
+              //3.没有找到时，有没有相近的拼音
+              Cycd.CyFindBypy(Pinyin.pinyin(input),function(err,docs){
+                if(!err && docs){
+                  var content = [];
+                  content.push({
+                    title:'亲！词典库未收录:\n'+input+'(' + Pinyin.pinyin(input) + ')',
+                    description:Pinyin.pinyin(input) + '\n亲！词典库内查不到:' + input + '\n 〖本应用提供单字及多字词语查功能〗' +
+                    '\n' + '点击到维基百科试试运气...',
+                    picurl: config.domain + '/error.jpg'
                    
-              },
-              {title:'点击到维基百科试试运气...',url:encodeURI(config.domain + '/wiki?search='+input)});
-              res.reply(content);
-            }
+                  });
+
+                  content.push({
+                    title:docs[0].cy,
+                    url:encodeURI(config.domain + '/cycd?id='+docs[0]._id)
+                  });
+
+                  content.push({title:'点击到维基百科试试运气...',url:encodeURI(config.domain + '/wiki?search='+input)}));
+                  res.reply(content);
+
+                }
+                else{
+                  var content = [];
+                  content.push({
+                    title:'亲！词典库未收录:\n'+input+'(' + Pinyin.pinyin(input) + ')',
+                    description:Pinyin.pinyin(input) + '\n亲！词典库内查不到:' + input + '\n 〖本应用提供单字及多字词语查功能〗' +
+                    '\n' + '点击到维基百科试试运气...',
+                    picurl: config.domain + '/error.jpg'
+                   
+                  },
+
+                  {title:'点击到维基百科试试运气...',url:encodeURI(config.domain + '/wiki?search='+input)});
+                  res.reply(content);
+                }
+
+              });
+
+              
+            }//end 3
           });
           
         }//else      
