@@ -9,23 +9,9 @@
   <title><%-zi%></title>
 </head>
 <body>
-	<script type="text/javascript">
-		var netType = {
-   		"network_type:wifi": "wifi网络",
-      "network_type:edge": "非wifi,包含3G/2G",
-      "network_type:fail": "网络断开连接",
-      "network_type:wwan": "2g或者3g"
-    };
+  
 
-    document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
-			//WeixinJSBridge.call('hideOptionMenu');
-			WeixinJSBridge.call('hideToolbar');
-			WeixinJSBridge.invoke("getNetworkType",{},function(e) {
-      	document.getElementById("wifi").innerText = '你使用的是' + netType[e.err_msg];
-      });
-		});
-</script>
-	<h1><%-zi%></h1>
+  <h1><%-zi%></h1>
 	<h2>拼音:<%-pinyin%> 五笔:<%-wubi%></h2>
 	<h2>笔划:<%-bihua%> 部首:<%-bushou%></h2>
 	<h2>注解</h2>
@@ -33,6 +19,6 @@
 	<h2>祥解</h2>
 	<%-xiangjie%>
 	<hr>
-	<em><strong id="wifi"></strong> by <a href="http://xhzd.mrlong.cn">http://xhzd.mrlong.cn</a></em>
+	<% %>
 </body>
 </html>
