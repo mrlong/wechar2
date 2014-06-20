@@ -2,3 +2,5 @@
 node_modules/wikipedia-js/package.json
 
 node_modules/wikipedia-js/README.md
+node_modules/*
+

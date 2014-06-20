@@ -43,7 +43,9 @@ app.use(connect.query());
 app.use(connect.static(__dirname + '/assets', { maxAge: 86400000 }));
 app.use(connect.cookieParser());
 app.use(connect.session({secret: config.secret}));
+
 app.use('/wechat', routes);
+
 
 /////////////这地方什么移到别的地方？？？？？？？？？？
 var tpl_pinyin = ejs.compile(fs.readFileSync(path.join(__dirname, 'views/pinyin.html'), 'utf-8'));
