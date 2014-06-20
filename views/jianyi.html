@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <title>建议</title>
+</head>
+<body>
+  <h3><%-msg%></h3>
+  
+<% if(showform==true){ %>    
+<form action="/jianyi" method="post" autocomplete="yes">
+  
+  <p>你的建议(必填): </p>
+  <textarea rows="6" cols="30"  required="required" name="content" autofocus></textarea>
+  <p>你的QQ: 
+  <input type="number" name="qq" />
+  </p>
+  <input type="submit" value="提交" />
+  
+</form>
+<% } %>
+  
+</body>
+</html>

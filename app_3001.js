@@ -28,7 +28,10 @@ var ejs = require('ejs');
 var routes = require('./routes');
 var Xhzd = require('./lib/xhzdSchema');  //字典库操作，以后要移出掉。
 var Cycd = require('./lib/cycdSchema');  //成语词典
+var Jinayi = require('./lib/jianyiSchema'); //建议
+
 var wikipedia = require("wikipedia-js");
+
 
 var worker = require('pm').createWorker();
 
@@ -39,6 +42,7 @@ app.use(connect.logger({
   stream: fs.createWriteStream(__dirname + '/logs/access.log')
 }));
 
+app.use(connect.bodyParser())
 app.use(connect.query());
 app.use(connect.static(__dirname + '/assets', { maxAge: 86400000 }));
 app.use(connect.cookieParser());
@@ -103,6 +107,26 @@ app.use('/wiki', function (req, res) {
     }); 
   };
 });
+
+//建议
+//jianyi?content="ssssssssss"
+var tpl_jianyi = ejs.compile(fs.readFileSync(path.join(__dirname, 'views/jianyi.html'), 'utf-8'));
+app.use('/jianyi', function (req,res) {
+  var content = req.body.content || ''; 
+  var qq = req.body.qq || '';
+  
+  if(content){
+    Jinayi.add(content,qq,function(err){
+      res.writeHead(200);
+      res.end(tpl_jianyi({msg: err?'保存失败':'谢谢你的建议，我会重视并持续改进。',showform:err?true:false}));
+    });
+  }
+  else {
+    res.writeHead(200);
+    res.end(tpl_jianyi({msg:'你的建议对我很重要！！！',showform:true}));
+  }
+});
+
 ////////////////////////////////////////////
 
 app.use('/', function (req, res) {

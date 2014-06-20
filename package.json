@@ -9,7 +9,7 @@
     "ejs": "*",
     "pm": "*",
     "wechat":"*",
-    "connect":"*",
+    "connect": "< 3.*",
     "mongoose":">=2.3.1",
     "wikipedia-js": "*"
   }
