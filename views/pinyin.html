@@ -20,10 +20,10 @@
   document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
 			//WeixinJSBridge.call('hideOptionMenu');
 			WeixinJSBridge.call('hideToolbar');
-			WeixinJSBridge.invoke("getNetworkType",{},function(e) {
-      	document.getElementById("wifi").innerText = '你使用的是' + netType[e.err_msg];
-      });
-		});
+      //	WeixinJSBridge.invoke("getNetworkType",{},function(e) {
+      //	document.getElementById("wifi").innerText = '你使用的是' + netType[e.err_msg];
+      //});
+  });
 </script>
   
 <style type="text/css">
@@ -48,7 +48,7 @@
         <%-xiangjie%>
     <% } %>  
 	<hr>	
-    <em><strong id="wifi"></strong> by <a href="http://www.mrlong.cn">龙仕云 2014</a></em>  
+    <em><strong id="wifi"></strong> 开发者： <a href="http://www.mrlong.cn">龙仕云 2014</a></em>  
 </body>
 
 </html>
