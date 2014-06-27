@@ -145,7 +145,7 @@ module.exports = function(message, req, res, next){
     console.log(input);
     var content = [];
     var myquery = input;
-    var myurl = 'http://fanyi.youdao.com/openapi.do?keyfrom=sunuptech&key=1650695939&type=data&doctype=json&version=1.1&q=' + myquery;
+    var myurl = 'http://fanyi.youdao.com/openapi.do?keyfrom=wechat-mrlong&key=120431144&type=data&doctype=json&version=1.1&q=' + myquery;
     var myhtml = '';
     
     var req = http.get(myurl,function(httpres){
