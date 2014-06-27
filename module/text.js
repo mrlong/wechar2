@@ -3,6 +3,7 @@
 // 文本信息推送器 
 //
 
+var http = require('http');
 var config = require('../config');
 var Util = require('../lib/util');
 var Xhzd = require('../lib/xhzdSchema');
@@ -139,15 +140,72 @@ module.exports = function(message, req, res, next){
       
     }
   }
+  ////////////////////// 英汉词典 //////////////////////////////////////////////////////
   else{
+    console.log(input);
     var content = [];
-
-    content.push({ 
-      title:'亲！暂不支持英汉字典。',
-      description:'点击到维基百科试试运气...',
-      url:encodeURI(config.domain + '/wiki?search='+input)
+    var myquery = input;
+    var myurl = 'http://fanyi.youdao.com/openapi.do?keyfrom=sunuptech&key=1650695939&type=data&doctype=json&version=1.1&q=' + myquery;
+    var myhtml = '';
+    
+    var req = http.get(myurl,function(httpres){
+      if(httpres.statusCode==200){
+        
+        httpres.on('data',function(data){
+          myhtml += data
+        });
+        
+        httpres.on('end',function(){
+          var jdata = JSON.parse(myhtml);
+          var mytran = '【解释】：';
+          for(var i=0;i<jdata.translation.length;i++){
+            mytran += '\n' + '   '+ jdata.translation[i];
+          };
+          
+          var myexplains = '【综合解释】：';
+          if(jdata.basic && jdata.basic.explains){
+            for(var i=0;i<jdata.basic.explains.length;i++){
+              myexplains += '\n' + '   ' +jdata.basic.explains[i];
+            };
+          };
+          
+          var myweb = '【举例】：';
+          if(jdata.web){
+            for(var i=0;i<jdata.web.length;i++){
+              myweb += '\n' + '   ' + jdata.web[i].key + '='+jdata.web[i].value;  
+            };
+          };
+          
+          content.push({
+            title:input,
+            description: mytran + '\n' + myexplains + '\n' +myweb + '\n\n' + 
+                '                    --来源有道数据库--',
+            url:encodeURI(config.domain + '/wiki?search='+input)
+          });
+          res.reply(content);
+        });
+      }
+      else{
+        content.push({ 
+        title:'亲！获取词典出错。' + res.statusCode,
+        description:'点击到维基百科试试运气...',
+        url:encodeURI(config.domain + '/wiki?search='+input)
+        });
+        res.reply(content);
+      }
     });
-    res.reply(content);
+    
+    req.on('error',function(err){
+      content.push({ 
+        title:'亲！获取词典出错。',
+        description:'点击到维基百科试试运气...',
+        url:encodeURI(config.domain + '/wiki?search='+input)
+      });
+      res.reply(content);
+    
+    });
+        
+    
   };
 
 /*
