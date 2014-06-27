@@ -127,6 +127,14 @@ app.use('/jianyi', function (req,res) {
   }
 });
 
+//使用说明
+var tpl_readme = ejs.compile(fs.readFileSync(path.join(__dirname, 'views/readme.html'), 'utf-8'));
+app.use('/readme', function (req,res) {
+  res.writeHead(200);
+  res.end(tpl_readme());
+});
+
+
 ////////////////////////////////////////////
 
 app.use('/', function (req, res) {
