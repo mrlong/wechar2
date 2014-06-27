@@ -17,9 +17,24 @@ module.exports = function(message, req, res, next){
   
   var input = (message.Content || '').trim();
   var content = '';
-
+  
+  //处理类型
+  var ftype=0; // = 0 表示中文新字典， =1 表示有道
+  if((input.length>2) && (input[0]=='f') && (input[1]=='y') && Util.isChinese(input))
+  {
+    ftype = 1;
+    input = input.substring(2,input.length);
+  }
+  else if(Util.isChinese(input) === false){
+    ftype = 1;
+  }
+  else if(Util.isChinese(input) === true){
+    ftype = 0;
+  };
+  
+  
   //中文
-  if (Util.isChinese(input) === true){
+  if (ftype === 0){
     //新华字典
     if (input.length === 1){
       Xhzd.ZiFind(input,function(err,doc){
@@ -141,10 +156,10 @@ module.exports = function(message, req, res, next){
     }
   }
   ////////////////////// 英汉词典 //////////////////////////////////////////////////////
-  else{
+  else if( ftype === 1 ){
     console.log(input);
     var content = [];
-    var myquery = input;
+    var myquery = encodeURI(input);
     var myurl = 'http://fanyi.youdao.com/openapi.do?keyfrom=wechat-mrlong&key=120431144&type=data&doctype=json&version=1.1&q=' + myquery;
     var myhtml = '';
     
@@ -157,7 +172,20 @@ module.exports = function(message, req, res, next){
         
         httpres.on('end',function(){
           var jdata = JSON.parse(myhtml);
-          var mytran = '【解释】：';
+          
+          var myfy = ''  //
+          if(jdata.basic.phonetic){
+            myfy = '【发音】：' + jdata.basic.phonetic;
+            //if(jdata.basic.uk-phonetic){
+            //  myfy += ' (英式)' + jdata.basic.uk-phonetic;
+            //};
+            //if(jdata.basic.us-phonetic){
+            //  myfy += ' (美式)' + jdata.basic.us-phonetic;
+            //};
+            myfy += '\n';
+          };
+          
+          var mytran = '【翻译】：';
           for(var i=0;i<jdata.translation.length;i++){
             mytran += '\n' + '   '+ jdata.translation[i];
           };
@@ -169,7 +197,7 @@ module.exports = function(message, req, res, next){
             };
           };
           
-          var myweb = '【举例】：';
+          var myweb = '【网络释义】：';
           if(jdata.web){
             for(var i=0;i<jdata.web.length;i++){
               myweb += '\n' + '   ' + jdata.web[i].key + '='+jdata.web[i].value;  
@@ -178,7 +206,7 @@ module.exports = function(message, req, res, next){
           
           content.push({
             title:input,
-            description: mytran + '\n' + myexplains + '\n' +myweb + '\n\n' + 
+            description: myfy + mytran + '\n' + myexplains + '\n' +myweb + '\n\n' + 
                 '                    --来源有道数据库--',
             url:encodeURI(config.domain + '/wiki?search='+input)
           });
