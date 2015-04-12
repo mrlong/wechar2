@@ -143,8 +143,8 @@ module.exports = function(message, req, res, next){
                   wikipedia.searchArticle(options, function(err, txt){
                     if(err || txt==null){
                       content.push({
-                        title: input+'(' + Pinyin.pinyin(input) + ')',
-                        description: err?'亲！查找维基百科出错,请尝试别的方法。':'亲!我们无法找到你要查的结果，试一下百度。',
+                        title: (err?'亲！查找维基百科出错,请尝试别的方法。':'亲!我们无法找到你要查的结果，试一下百度。')+
+                              input+'(' + Pinyin.pinyin(input) + ')',
                         picurl: err?config.domain + '/error.jpg':''
                       });
                       content.push({title:'用百度试试运气...',url:encodeURI('http://baike.baidu.com/item/'+input)});
@@ -154,7 +154,8 @@ module.exports = function(message, req, res, next){
                       //维基找到空的内容，说到维基没有收录到。
                       content.push({
                         title: input+'(' + Pinyin.pinyin(input) + ')',
-                        description:txt,
+                        description:txt+ '\n\n'  + 
+                        '                    《维基百科》',
                         url:encodeURI('http://zh.m.wikipedia.org/wiki/'+input)
                       }); 
                       res.reply(content);
@@ -188,6 +189,11 @@ module.exports = function(message, req, res, next){
         
         httpres.on('end',function(){
           var jdata = JSON.parse(myhtml);
+          
+          if(!jdata){
+            res.reply('有道数据源出错');
+            return;
+          };
           
           var myfy = ''  //
           if(jdata.basic.phonetic){
