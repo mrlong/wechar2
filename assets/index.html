@@ -2,20 +2,16 @@
 <html>
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<!--  <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>-->
+    
   <title>字典</title>
 </head>
 <script>
-  function is_weixn(){
-    var ua = navigator.userAgent.toLowerCase();
-    if(ua.match(/MicroMessenger/i)=='micromessenger') {
-      return true;
-    } else {
-      return false;
-    }
-  };
+
 
   function gz(){
-    if (typeof WeixinJSBridge == 'undefined') return false; 
+    //if (typeof WeixinJSBridge == 'undefined') return false; 
 
     //下面这个路径是在后面的素材库内的。要对应起来。
     window.open('http://mp.weixin.qq.com/s?__biz=MzA4MzQ1MzUyMA==&mid=200145672&idx=1&sn=ac08ac5141f75e1d27770c1a944a4af6#rd');
@@ -37,14 +33,10 @@
         });  */
   };
 
-  function loaddoc(){
-    if (is_weixn() == true){
-      document.getElementById('gz').innerHTML='<input type="button"   style="width: 200px; height: 80px;background-color: #FA5858;font-size: 50px" value="关 注" onClick="gz()"/>';    
-    };
-  };
+
 
 </script>
-<body onload="loaddoc()">
+<body >
   <h1>字典</h1>
   <h2><font color=red>最后修改时间:2014－6－27 | 创建时间:2014－3－2</font></h2>
   <h3>
@@ -62,7 +54,7 @@
           <img src="./qrcode.jpg" /> 
         </td>
         <td id='gz'>
-
+          <input type="button"  style="width: 200px; height: 80px;background-color: #FA5858;font-size: 50px" value="关 注" onClick="gz()"/>
         </td>
       </tr>
       <tr >
