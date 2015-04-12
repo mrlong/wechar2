@@ -147,7 +147,7 @@ module.exports = function(message, req, res, next){
                         description:'亲！查找维基百科出错,请尝试别的方法。',
                         picurl: config.domain + '/error.jpg'
                       });
-                      content.push({title:'用百度试试运气...',url:encodeURI(config.domain + '/wiki?search='+input)});
+                      content.push({title:'用百度试试运气...',url:encodeURI('http://baike.baidu.com/item/'+input)});
                     }
                     else{
                       //维基找到空的内容，说到维基没有收录到。
