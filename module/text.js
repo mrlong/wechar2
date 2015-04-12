@@ -2,6 +2,11 @@
 // 作者：龙仕云  2014-3-18
 // 文本信息推送器 
 //
+// 
+// 修改直接如找不到就到维基去掉了。
+//
+//
+//
 
 var http = require('http');
 var config = require('../config');
@@ -11,6 +16,7 @@ var Pinyin = require('../lib/pinyin');
 var Shpz = require('../lib/shpzSchema');
 var Cycd = require('../lib/cycdSchema');
 var Hycd = require('../lib/hycdSchema');
+var wikipedia = require("wikipedia-js");
 
 module.exports = function(message, req, res, next){
   //console.log(message);
@@ -69,7 +75,7 @@ module.exports = function(message, req, res, next){
     }
     //新华词典
     else {
-        //1.找成语词典
+      //1.找成语词典
       Cycd.CyFind(input,function(err,doc){
         if(!err && doc){
           var content = [];
@@ -131,22 +137,30 @@ module.exports = function(message, req, res, next){
 
                 }
                 else{
+                  //没有找到时，就直接到维基内查找。
                   var content = [];
-                  content.push({
-                    title:'亲！词典库未收录:\n'+input+'(' + Pinyin.pinyin(input) + ')',
-                    description:Pinyin.pinyin(input) + '\n亲！词典库内查不到:' + input + '\n 〖本应用提供单字及多字词语查功能〗' +
-                    '\n' + '点击到维基百科试试运气...',
-                    picurl: config.domain + '/error.jpg'
-                   
-                  },
-
-                  {title:'点击到维基百科试试运气...',url:encodeURI(config.domain + '/wiki?search='+input)});
-                  res.reply(content);
+                  var options = {query: input, format: "txt", summaryOnly: true};
+                  wikipedia.searchArticle(options, function(err, txt){
+                    if(err || txt==null){
+                      content.push({
+                        title: input+'(' + Pinyin.pinyin(input) + ')',
+                        description:'亲！查找维基百科出错,请尝试别的方法。',
+                        picurl: config.domain + '/error.jpg'
+                      });
+                      content.push({title:'用百度试试运气...',url:encodeURI(config.domain + '/wiki?search='+input)});
+                    }
+                    else{
+                      //维基找到空的内容，说到维基没有收录到。
+                      content.push({
+                        title: input+'(' + Pinyin.pinyin(input) + ')',
+                        description:txt,
+                        url:encodeURI('http://zh.m.wikipedia.org/wiki/'+input)
+                      });  
+                    }  
+                  });
+                  
                 }
-
               });
-
-              
             }//end 3
           });
           
