@@ -139,7 +139,7 @@ app.use('/readme', function (req,res) {
 
 app.use('/', function (req, res) {
   res.writeHead(200);
-  res.end('hello node api');
+  res.end('找不到关联的内容，请重新查询。');
 });
 
 /**
