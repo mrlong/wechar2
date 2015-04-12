@@ -145,7 +145,7 @@ module.exports = function(message, req, res, next){
                       content.push({
                         title: (err?'亲！查找维基百科出错,请尝试别的方法。':'亲!我们无法找到你要查的结果，试一下百度。')+
                               input+'(' + Pinyin.pinyin(input) + ')',
-                        picurl: err?config.domain + '/error.jpg':''
+                        picurl: config.domain + (err?'/error.jpg':'/warn.jpg')
                       });
                       content.push({title:'用百度试试运气...',url:encodeURI('http://baike.baidu.com/item/'+input)});
                       res.reply(content);
