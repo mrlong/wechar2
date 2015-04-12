@@ -144,10 +144,11 @@ module.exports = function(message, req, res, next){
                     if(err || txt==null){
                       content.push({
                         title: input+'(' + Pinyin.pinyin(input) + ')',
-                        description:'亲！查找维基百科出错,请尝试别的方法。',
-                        picurl: config.domain + '/error.jpg'
+                        description: err?'亲！查找维基百科出错,请尝试别的方法。':'亲!我们无法找到你要查的结果，试一下百度。',
+                        picurl: err?config.domain + '/error.jpg':''
                       });
                       content.push({title:'用百度试试运气...',url:encodeURI('http://baike.baidu.com/item/'+input)});
+                      res.reply(content);
                     }
                     else{
                       //维基找到空的内容，说到维基没有收录到。
@@ -155,7 +156,8 @@ module.exports = function(message, req, res, next){
                         title: input+'(' + Pinyin.pinyin(input) + ')',
                         description:txt,
                         url:encodeURI('http://zh.m.wikipedia.org/wiki/'+input)
-                      });  
+                      }); 
+                      res.reply(content);
                     }  
                   });
                   
