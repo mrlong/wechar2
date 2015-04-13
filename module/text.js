@@ -147,6 +147,7 @@ module.exports = function(message, req, res, next){
                               input+'(' + Pinyin.pinyin(input) + ')',
                         picurl: config.domain + (err?'/error2.jpg':'/warn.jpg')
                       });
+                      content.push({title:'努力尝试模糊搜索...',url:encodeURI('/wikisearch?search='+input)});
                       content.push({title:'用百度试试运气...',url:encodeURI('http://wapbaike.baidu.com/item/'+input)});
                       res.reply(content);
                     }

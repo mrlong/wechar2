@@ -9,9 +9,9 @@
 </head>
 
 <script>
-  function load(){
-    onloaddata();
-  };
+  //function load(){
+  //  onloaddata();
+  //};
   
   var onloaddata =function(){		    
         //查找出相类似的内容
@@ -48,7 +48,7 @@
     		document.getElementById("content_same").innerHTML='在正接收到数据中...';
     	}  
         };
-        xmlhttp_same.open("GET",'/wiki?search=虎跳&idx=2',true);
+        xmlhttp_same.open("GET",'/wiki?search=<%-search%>&idx=2',true);
         xmlhttp_same.send();
   };
   
@@ -62,7 +62,7 @@
    };
 </style>  
 
-<body onload="load()"> 
+<body> 
   <div id="header">
      <a href="/jianyi" >建议</a>
   </div>
