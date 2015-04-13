@@ -122,6 +122,14 @@ app.use('/wiki', function (req, res) {
     });   
   };
 });
+//wikipediaSearch
+var tpl_wikisearch = ejs.compile(fs.readFileSync(path.join(__dirname, 'views/wikipediasearch.html'), 'utf-8'));
+app.use('/wikisearch', function (req, res) {
+  var search = req.query.search || '';
+  res.writeHead(200);
+  res.end(tpl_wikisearch({'search':search,'content':'请稍候...'}));
+});
+
 
 //建议
 //jianyi?content="ssssssssss"
