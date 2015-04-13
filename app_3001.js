@@ -89,11 +89,12 @@ var tpl_wiki = ejs.compile(fs.readFileSync(path.join(__dirname, 'views/wikipedia
 app.use('/wiki', function (req, res) {
   var search = req.query.search || '';
   var idx    = req.query.idx || '';
+  var srprop = req.query.srp;   //有值只是搜索标题，不显示内容
   if (idx==''){
     res.writeHead(200);
     res.end(tpl_wiki({'search':search,'content':'请稍候...'}));
   }
-  else{
+  else if (idx=='1'){
     var options = {query: search, format: "html", summaryOnly: true};
     wikipedia.searchArticle(options, function(err, html){
       if(err){
@@ -105,6 +106,20 @@ app.use('/wiki', function (req, res) {
         res.end(html);
       }  
     }); 
+  }
+  else if(idx=='2'){  //搜索相类似 srprop:''
+    var options = {query: search, format: "json", summaryOnly: true};
+    if(srprop!=null){options.srprop=""};
+    wikipedia.searchTxt(options, function(err, json){
+      if(err){
+        res.writeHead(200);
+        res.end('查找维基百科出错，请重试。' +err);
+      }
+      else{
+        res.writeHead(200);
+        res.end(json);
+      }  
+    });   
   };
 });
 
