@@ -17,6 +17,7 @@ var Shpz = require('../lib/shpzSchema');
 var Cycd = require('../lib/cycdSchema');
 var Hycd = require('../lib/hycdSchema');
 var wikipedia = require("wikipedia-js");
+var tuiguang = require('../tuiguang');
 
 module.exports = function(message, req, res, next){
   //console.log(message);
@@ -91,7 +92,7 @@ module.exports = function(message, req, res, next){
           res.reply(content);
         }
         else{
-          //找汉语词典
+          //2.找汉语词典
           Hycd.HyFind(input,function(err,doc){
             if(!err && doc){
               var content = [];
@@ -114,57 +115,38 @@ module.exports = function(message, req, res, next){
               res.reply(content);
             }              
             else{
-              //3.没有找到时，有没有相近的拼音
-              Cycd.CyFindBypy(Pinyin.pinyin(input),function(err,docs){
-                if(!err && docs && docs.length>0){
-                  var content = [];
+              //没有找到时，就直接到维基内查找。
+              var content = [];
+              var options = {query: input, format: "txt", summaryOnly: true};
+              wikipedia.searchArticle(options, function(err, txt){
+                if(err || txt==null){
                   content.push({
-                    title:'亲！词典库未收录:\n'+input+'(' + Pinyin.pinyin(input) + ')',
-                    description:Pinyin.pinyin(input) + '\n亲！词典库内查不到:' + input + '\n 〖本应用提供单字及多字词语查功能〗' +
-                    '\n' + '点击到维基百科试试运气...',
-                    picurl: config.domain + '/error.jpg'
-                   
+                    title: (err?'亲！查找维基百科出错,请尝试别的方法。\n':'亲!无法找到你要查的结果，试一下百度。\n')+
+                              input+'(' + Pinyin.pinyin(input) + ')',
+                    picurl: config.domain + (err?'/error2.jpg':'/warn.jpg')
                   });
+                  content.push({title:'1、努力尝试模糊搜索...',url:encodeURI(config.domain + '/wikisearch?search='+input)});
+                  content.push({title:'2、用百度试试运气...',url:encodeURI('http://wapbaike.baidu.com/item/'+input)});
+                  tuiguang.textmessage(input,content,function(err,data){
+                    res.reply(content);
+                  });           
                   
-                  content.push({
-                    title:docs[0].cy,
-                    url:encodeURI(config.domain + '/cycd?id='+docs[0]._id)
-                  });
-
-                  content.push({title:'点击到维基百科试试运气...',url:encodeURI(config.domain + '/wiki?search='+input)});
-                  
-                  res.reply(content);
-
                 }
                 else{
-                  //没有找到时，就直接到维基内查找。
-                  var content = [];
-                  var options = {query: input, format: "txt", summaryOnly: true};
-                  wikipedia.searchArticle(options, function(err, txt){
-                    if(err || txt==null){
-                      content.push({
-                        title: (err?'亲！查找维基百科出错,请尝试别的方法。\n':'亲!无法找到你要查的结果，试一下百度。\n')+
-                              input+'(' + Pinyin.pinyin(input) + ')',
-                        picurl: config.domain + (err?'/error2.jpg':'/warn.jpg')
-                      });
-                      content.push({title:'1、努力尝试模糊搜索...',url:encodeURI(config.domain + '/wikisearch?search='+input)});
-                      content.push({title:'2、用百度试试运气...',url:encodeURI('http://wapbaike.baidu.com/item/'+input)});
-                      res.reply(content);
-                    }
-                    else{
-                      //维基找到空的内容，说到维基没有收录到。
-                      content.push({
-                        title: input+'(' + Pinyin.pinyin(input) + ')',
-                        description:txt+ '\n\n'  + 
-                        '                    《维基百科》',
-                        url:encodeURI('http://zh.m.wikipedia.org/wiki/'+input)
-                      }); 
-                      res.reply(content);
-                    }  
-                  });
-                  
-                }
+                  //维基找到空的内容，说到维基没有收录到。
+                  content.push({
+                    title: input+'(' + Pinyin.pinyin(input) + ')',
+                    description:txt+ '\n\n'  + 
+                    '                    《维基百科》',
+                    url:encodeURI('http://zh.m.wikipedia.org/wiki/'+input)
+                  }); 
+                  res.reply(content);
+                }  
               });
+              
+              //3.没有找到时，有没有相近的拼音
+              //相近的拼音去掉，作者
+              
             }//end 3
           });
           
