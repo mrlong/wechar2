@@ -14,14 +14,13 @@
   //};
   
   var onloaddata =function(){
-        document.getElementById("wikihome").style.display="none";
 		var xmlhttp=new XMLHttpRequest();
 		xmlhttp.onreadystatechange=function(){
 		if (xmlhttp.readyState==4 )
     	{
     		if (xmlhttp.status==200){
-    		  document.getElementById("content").innerHTML=xmlhttp.responseText==''?'亲！维基百科没查找到的内容,\n尝试点<a href="http://wapbaike.baidu.com/item/<%-search%>">百度百科查</a>。':xmlhttp.responseText;
-    		  document.getElementById("wikihome").style.display=xmlhttp.responseText==''?"none":"";
+    		  document.getElementById("content").innerHTML=xmlhttp.responseText==''?'亲！维基百科没查找到的内容,\n尝试点<a href="http://wapbaike.baidu.com/item/<%-search%>">百度百科查</a>。':xmlhttp.responseText + '</br><strong>更祥细内容点<a href="http://zh.m.wikipedia.org/wiki/<%-search%>">维基百科</a></strong>';
+              //document.getElementById("wikihome").style.display=xmlhttp.responseText==''?"none":"";
             }
     		else{
     		  document.getElementById("content").innerHTML='服务请求出错，代码：' + xmlhttp.status;
@@ -102,8 +101,10 @@
 <b>相似内容:</b>
 <small><p id='content_same'><%-content%></p><small>
 <hr>
+<!--
 <div style="text-align:right;">
 <strong id='wikihome'>更祥细进入<a href="http://zh.m.wikipedia.org/wiki/<%-search%>">维基百科</a></strong> 
 </div>
+-->
 </body>
 </html>
