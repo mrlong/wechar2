@@ -19,7 +19,7 @@
 		if (xmlhttp.readyState==4 )
     	{
     		if (xmlhttp.status==200){
-    		  document.getElementById("content").innerHTML=xmlhttp.responseText==''?'亲！维基百科没查找到的内容,\n尝试点<a href="http://wapbaike.baidu.com/item/<%-search%>">百度百科查</a>。':xmlhttp.responseText + '<div style="text-align:right;"><strong>更内容点<a href="http://zh.m.wikipedia.org/wiki/<%-search%>">维基百科</a>。</strong></div>';
+    		  document.getElementById("content").innerHTML=xmlhttp.responseText==''?'亲！维基百科没查找到的内容,\n尝试点<a href="http://wapbaike.baidu.com/item/<%-search%>">百度百科查</a>。':xmlhttp.responseText + '<div style="text-align:right;"><strong>更详细内容点<a href="http://zh.m.wikipedia.org/wiki/<%-search%>">维基百科</a>。</strong></div>';
               //document.getElementById("wikihome").style.display=xmlhttp.responseText==''?"none":"";
             }
     		else{
