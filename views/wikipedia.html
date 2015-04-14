@@ -19,10 +19,12 @@
 		if (xmlhttp.readyState==4 )
     	{
     		if (xmlhttp.status==200){
-    			document.getElementById("content").innerHTML=xmlhttp.responseText==''?'维基百科内还没有你所查找的内容。':xmlhttp.responseText;
-    		}
+    		  document.getElementById("content").innerHTML=xmlhttp.responseText==''?'维基百科内还没有你所查找的内容。':xmlhttp.responseText;
+    		  document.getElementById("wikihome").style.display=xmlhttp.responseText==''?"none":"";
+              document.getElementById("baiduhome").style.display=xmlhttp.responseText==''?"":"none";
+            }
     		else{
-    			document.getElementById("content").innerHTML='服务请求出错，代码：' + xmlhttp.status;
+    		  document.getElementById("content").innerHTML='服务请求出错，代码：' + xmlhttp.status;
     		}
     	
     	}
@@ -101,7 +103,8 @@
 <small><p id='content_same'><%-content%></p><small>
 <hr>
 <div style="text-align:right;">
-<strong>更祥细进入<a href="http://zh.m.wikipedia.org/wiki/<%-search%>">维基百科</a></strong> 
+<strong id='wikihome'>更祥细进入<a href="http://zh.m.wikipedia.org/wiki/<%-search%>">维基百科</a></strong> 
+<strong id='baiduhome'>到<a href="http://wapbaike.baidu.com/item/<%-search%>">百度百科查</a></strong>
 </div>
 </body>
 </html>
