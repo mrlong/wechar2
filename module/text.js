@@ -213,7 +213,8 @@ module.exports = function(message, req, res, next){
             title:input,
             description: myfy + mytran + '\n' + myexplains + '\n' +myweb + '\n\n' + 
                 '                    --来源有道数据库--',
-            url:encodeURI(config.domain + '/wiki?search='+input)
+            //url:encodeURI(config.domain + '/wiki?search='+input)
+            url:encodeURI('http://dict.youdao.com/search?q='+input)
           });
           res.reply(content);
         });
