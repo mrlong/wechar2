@@ -171,10 +171,15 @@ module.exports = function(message, req, res, next){
         });
         
         httpres.on('end',function(){
-          var jdata = JSON.parse(myhtml);
           
-          if(!jdata){
-            res.reply('有道数据源出错');
+          try{
+            var jdata = JSON.parse(myhtml);
+          }catch (e) {
+            res.reply('亲！有道数据源出错');
+          };
+          
+          if(!jdata || !jdata.basic){
+            res.reply('亲! 有道数据源出错');
             return;
           };
           
