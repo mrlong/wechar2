@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <head>
   <meta charset="utf-8" />
@@ -19,7 +20,7 @@
 		if (xmlhttp.readyState==4 )
     	{
     		if (xmlhttp.status==200){
-    		  document.getElementById("content").innerHTML=xmlhttp.responseText==''?'亲！维基百科没查找到的内容,\n尝试点<a href="http://wapbaike.baidu.com/item/<%-search%>">百度百科查</a>。':xmlhttp.responseText + '<div style="text-align:right;"><strong>更详细内容点<a href="http://zh.m.wikipedia.org/wiki/<%-search%>">维基百科</a>。</strong></div>';
+    		  document.getElementById("content").innerHTML=(xmlhttp.responseText==''||xmlhttp.responseText.indexOf('Error')>=0)?'亲！维基百科没查找到的内容,\n尝试点<a href="http://wapbaike.baidu.com/item/<%-search%>">百度百科查</a>。':xmlhttp.responseText + '<div style="text-align:right;"><strong>更详细内容点<a href="http://zh.m.wikipedia.org/wiki/<%-search%>">维基百科</a>。</strong></div>';
               //document.getElementById("wikihome").style.display=xmlhttp.responseText==''?"none":"";
             }
     		else{
@@ -98,7 +99,7 @@
   </div>
   
 <p id='content'><%-content%></p>
-<b>相似内容:</b>
+<b>相关内容:</b>
 <small><p id='content_same'><%-content%></p><small>
 <!--
 <hr>
