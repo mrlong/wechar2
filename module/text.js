@@ -87,7 +87,7 @@ module.exports = function(message, req, res, next){
                          '【出自】:\n' + doc.cz  + '\n'  +
                          '【示例】:\n' + doc.sl  + '\n\n'  +
                          '                    《成语大全》',
-            url:encodeURI(config.domain + '/wikipedia?search='+input)
+            url:encodeURI(config.domain + '/wiki?search='+input)
           });
           res.reply(content);
         }
