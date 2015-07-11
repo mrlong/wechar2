@@ -125,8 +125,13 @@ module.exports = function(message, req, res, next){
                               input+'(' + Pinyin.pinyin(input) + ')',
                     picurl: config.domain + (err?'/error2.jpg':'/warn.jpg')
                   });
-                  content.push({title:'1、努力尝试模糊搜索...',url:encodeURI(config.domain + '/wikisearch?search='+input)});
-                  content.push({title:'2、用百度试试运气...',url:encodeURI('http://wapbaike.baidu.com/item/'+input)});
+                  if(err){
+                    content.push({title:'1、用百度试试运气...',url:encodeURI('http://wapbaike.baidu.com/item/'+input)});
+                  }
+                  else{
+                    content.push({title:'1、努力尝试模糊搜索...',url:encodeURI(config.domain + '/wikisearch?search='+input)});
+                    content.push({title:'2、用百度试试运气...',url:encodeURI('http://wapbaike.baidu.com/item/'+input)});
+                  };
                   tuiguang.textmessage(input,content,function(err,data){
                     res.reply(content);
                   });           
